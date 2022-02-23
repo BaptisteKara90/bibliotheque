@@ -110,7 +110,7 @@ $livres=$requete -> fetchAll(PDO::FETCH_ASSOC);
                 <td><?= $livre['num_ISBN'] ?></td>
                 <td><?= $livre['titre'] ?></td>
                 <td><img width="100%" height="100%" src="<?=URL_ADMIN?>img/illustration/<?=$livre['illustration']?>" alt=""></td>
-                <td><?= substr($livre['resume'],0,100) ?> [...]</td>
+                <td><?= substr($livre['resume'],0,100)?>[...]</td>
                 <td><?= $livre['libelle']?></td>
                 <td><?= $livre['prix'] ?>€</td>
                 <td><?= $livre['nb_pages'] ?></td>

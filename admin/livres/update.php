@@ -19,14 +19,27 @@ $categories = $requete->fetchAll(PDO::FETCH_ASSOC);
 if (isset($_GET['id'])) {
     $id = intval($_GET['id']);
     if ($id > 0) {
-        $sql = 'SELECT livre.id AS livre_id, categorie.id AS categorie_id, livre.num_ISBN, livre.titre, livre.illustration, livre.resume, livre.prix, livre.nb_pages, livre.date_achat, livre.disponibilite, categorie.libelle FROM categorie_livre INNER JOIN categorie ON categorie_livre.id_categorie = categorie.id INNER JOIN livre ON categorie_livre.id_livre = livre.id WHERE livre.id = :id';
+        $sql = 'SELECT * FROM livre WHERE id = :id';
         $requete = $bdd->prepare($sql);
         $requete->execute(array(':id' => $id));
         $livre = $requete->fetch(PDO::FETCH_ASSOC);
-        }else {
-    header('location:index.php');
-    die;
+    } else {
+        header('location:index.php');
+        die;
+    }
 }
+
+$sql = 'SELECT id_categorie FROM categorie_livre WHERE id_livre= ?';
+$requete = $bdd->prepare($sql);
+$requete -> execute([$id]);
+$categorie_livre = $requete -> fetchAll(PDO::FETCH_NUM);
+$categorie_id = [];
+if (count($categorie_livre) >= 1) {
+    foreach ($categorie_livre as $id_categorie) {
+        $categorie_id[] = implode('', $id_categorie);
+    }
+}else {
+    $categorie_id = $categorie_livre[0];
 }
 ?>
 
@@ -96,7 +109,7 @@ if (isset($_GET['id'])) {
 
                     <div class="container">
                         <form action="action.php" method="POST" enctype="multipart/form-data">
-                            <input type="hidden" name="id" value="<?= $livre['livre_id'] ?>">
+                            <input type="hidden" name="id" value="<?= $livre['id'] ?>">
                             <div class="mb-3">
                                 <label for="nom" class="form-label">Numéro ISBN : </label>
                                 <input type="text" name="num_isbn" class="form-control" id="num_isbn" value="<?= $livre['num_ISBN'] ?>">
@@ -116,12 +129,12 @@ if (isset($_GET['id'])) {
                             <div class="mb-3">
                                 <select class="js-example-basic-multiple" name="categorie[]" multiple="multiple">
                                     <?php foreach ($categories as $categorie) : ?>
-                                        <?php  if ($livre['categorie_id'] == $categorie['id']) {
-                                           $selected = 'selected' ;
-                                        }else {
+                                        <?php if (in_array($categorie['id'], $categorie_id)) {
+                                            $selected = 'selected';
+                                        } else {
                                             $selected = '';
                                         }  ?>
-                                    <option value="<?=$categorie['id']?>" <?= $selected?>> <?= $categorie['libelle']?></option>
+                                        <option value="<?= $categorie['id'] ?>" <?= $selected ?>> <?= $categorie['libelle'] ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -153,7 +166,8 @@ if (isset($_GET['id'])) {
             </div>
             <!-- Footer -->
             <?php include PATH_ADMIN . 'includes/footer.php'; ?>
-            <script> $(document).ready(function(){
-                $('.js-example-basic-multiple').select2();
-            });
+            <script>
+                $(document).ready(function() {
+                    $('.js-example-basic-multiple').select2();
+                });
             </script>
