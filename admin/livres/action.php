@@ -76,7 +76,6 @@ if (isset($_POST['btn_update_livre'])) {
     } else {
 
         $_SESSION['error_update_livre'] = false;
-        header('location:index.php');
 
     }
 
@@ -168,17 +167,48 @@ if (isset($_POST['btn_add_livre'])) {
 
 
 //-------SUPPRIMER UN LIVRE--------
-if (isset($_GET['id'])) {
+if (isset($_GET['id'])){
     $id = intval($_GET['id']);
-    if ($id > 0) {
-        $sql = 'DELETE FROM livre WHERE id = :id ';
-        $requete = $bdd->prepare($sql);
-        if (!$requete->execute(array(':id' => $id))) {
-            header('location:index.php');
-            die;
-        } else {
-            header('location:index.php');
-            die;
-        }
+    if ($id <= 0){
+        // erreur ID incorrect
+        $_SESSION['error_delete_livre'] = true;
+        header('location:index.php');
+        die;
     }
+    $sql = "SELECT illustration FROM livre WHERE id = ?";
+    $req = $bdd->prepare($sql);
+    $req->execute([$id]);
+    $nom_illustration = $req->fetch(PDO::FETCH_ASSOC);
+    $nom_illustration = $nom_illustration['illustration'];
+    $chemin_illustration = PATH_ADMIN . 'img/illustration/' . $nom_illustration;
+    if (!is_file($chemin_illustration)){
+       $_SESSION['error_delete_illustration'] = true;
+       header('location:index.php'); 
+       die;
+    }
+    if (!unlink($chemin_illustration)){
+        $_SESSION['error_delete_illustration'] = true;
+        header('location:index.php');
+        die;
+    }
+
+    // on supprime le lien categorie sur la BDD
+    $sql = 'DELETE FROM categorie_livre WHERE id_livre = ?';
+    $requete = $bdd->prepare($sql);
+    if (!$requete->execute([$id])) {
+        header('location:update.php?id=' . $id);
+        die;
+    }
+
+    // on supprime le livre en BDD
+    $sql = "DELETE FROM livre WHERE id = ?";
+    $req = $bdd->prepare($sql);
+    if (!$req->execute([$id])){
+        $_SESSION['error_delete_livre'] = true;
+        header('location:index.php');
+        die;
+    }
+    $_SESSION['error_delete_livre'] = false;
+    header('location:index.php');
+    die;
 }

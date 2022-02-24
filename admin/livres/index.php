@@ -8,10 +8,27 @@ if (!isConnect()) {
     die;
 }
 
+$sql = 'SELECT * FROM categorie';
+$requete = $bdd -> query($sql);
+$categories = $requete -> fetchAll(PDO::FETCH_ASSOC);
 
-$sql = 'SELECT livre.id AS livre_id, livre.num_ISBN, livre.titre, livre.illustration, livre.resume, livre.prix, livre.nb_pages, livre.date_achat, livre.disponibilite, categorie.libelle FROM categorie_livre INNER JOIN categorie ON categorie_livre.id_categorie = categorie.id INNER JOIN livre ON categorie_livre.id_livre = livre.id';
+$sql = 'SELECT * FROM livre';
 $requete = $bdd ->query($sql);
 $livres=$requete -> fetchAll(PDO::FETCH_ASSOC);
+
+$sql = 'SELECT id_categorie FROM categorie_livre';
+$requete = $bdd->query($sql);
+$categorie_livre = $requete -> fetchAll(PDO::FETCH_NUM);
+$categorie_id = [];
+if (count($categorie_livre) >= 1) {
+    foreach ($categorie_livre as $id_categorie) {
+        $categorie_id[] = implode('/', $id_categorie);
+    }
+}else {
+    $categorie_id = $categorie_livre[0];
+}
+
+
 ?>
 
 
@@ -80,6 +97,11 @@ $livres=$requete -> fetchAll(PDO::FETCH_ASSOC);
                     unset($_SESSION['error_add_livre']);
                 }
 
+                if (isset($_SESSION['error_delete_livre']) && $_SESSION['error_delete_livre'] == false) {
+                   toto('success', 'La suppression du livre a bien été effectué!');
+                   unset($_SESSION['error_delete_livre']);
+                }
+
             ?>
 
 <div class="container">
@@ -106,19 +128,36 @@ $livres=$requete -> fetchAll(PDO::FETCH_ASSOC);
         <?php foreach ($livres as $livre) : ?>
             <tr>
                 <!-- AFFICHAGE DES CHAMPS -->
-                <th scope="row"><?= $livre['livre_id'] ?></th>
+                <th scope="row"><?= $livre['id'] ?></th>
                 <td><?= $livre['num_ISBN'] ?></td>
                 <td><?= $livre['titre'] ?></td>
                 <td><img width="100%" height="100%" src="<?=URL_ADMIN?>img/illustration/<?=$livre['illustration']?>" alt=""></td>
-                <td><?= substr($livre['resume'],0,100)?>[...]</td>
-                <td><?= $livre['libelle']?></td>
+                <td><?= substr($livre['resume'],0,100) ?> [...]</td>
+                <td>
+                <?php 
+                    $sql = 'SELECT categorie.libelle FROM categorie_livre INNER JOIN categorie ON  categorie.id = categorie_livre.id_categorie WHERE id_livre= ?';
+                    $requete = $bdd->prepare($sql);
+                    $requete -> execute([$livre['id']]);
+                    $categorie_livre = $requete -> fetchAll(PDO::FETCH_NUM);
+                    $categorie_libelle = [];
+                    if (count($categorie_livre) > 1) {
+                        foreach ($categorie_livre as $libelle_categorie) {
+                            // var_dump($libelle_categorie);
+                            $categorie_libelle = implode(',', $libelle_categorie);
+                            echo ' ' . $categorie_libelle;
+                        }
+                    }else {
+                        $categorie_libelle = $categorie_livre[0];
+                        echo $categorie_libelle[0];
+                    }
+                                        ?></td>
                 <td><?= $livre['prix'] ?>€</td>
                 <td><?= $livre['nb_pages'] ?></td>
                 <td><?= $livre['date_achat'] ?></td>
                 <td><?= $livre['disponibilite'] ?></td>
-                <td><a href="<?=URL_ADMIN?>livres/single.php?id=<?= $livre['livre_id'] ?>" class="btn btn-success">Voir</a></td>
-                <td><a href="<?=URL_ADMIN?>livres/update.php?id=<?= $livre['livre_id'] ?>" class="btn btn-warning">Modifier</a></td>
-                <td><a href="<?=URL_ADMIN?>livres/action.php?id=<?= $livre['livre_id'] ?>" class="btn btn-danger">Supprimer</a></td>
+                <td><a href="<?=URL_ADMIN?>livres/single.php?id=<?= $livre['id'] ?>" class="btn btn-success">Voir</a></td>
+                <td><a href="<?=URL_ADMIN?>livres/update.php?id=<?= $livre['id'] ?>" class="btn btn-warning">Modifier</a></td>
+                <td><a href="<?=URL_ADMIN?>livres/action.php?id=<?= $livre['id'] ?>" class="btn btn-danger">Supprimer</a></td>
             </tr>
         <?php endforeach; ?>
     </tbody>
