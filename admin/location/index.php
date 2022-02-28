@@ -69,17 +69,7 @@ if (!isConnect()) {
 <table class="table">
     <thead>
         <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Numéro ISBN</th>
-            <th scope="col">Titre</th>
-            <th scope="col">Illustration</th>
-            <th scope="col">Auteur</th>
-            <th scope="col">Résumé</th>
-            <th scope="col">Catégorie</th>
-            <th scope="col">Prix d'achat</th>
-            <th scope="col">Nombre de pages</th>
-            <th scope="col">Date d'achat</th>
-            <th scope="col">Disponibilité</th>
+            
             <th scope="col">Voir</th>
             <th scope="col">Modifier</th>
             <th scope="col">Supprimer</th>
@@ -87,17 +77,7 @@ if (!isConnect()) {
     </thead>
     <tbody>
             <tr>
-                <th scope="row"></th>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td</td>
-                <td></td>
+               
                 <td><a href="<?=URL_ADMIN?>location/single.php" class="btn btn-success">Voir</a></td>
                 <td><a href="<?=URL_ADMIN?>location/update.php" class="btn btn-warning">Modifier</a></td>
                 <td><a href="<?=URL_ADMIN?>location/action.php" class="btn btn-danger">Supprimer</a></td>
