@@ -44,3 +44,28 @@ function isAdmin(){
 function isSalarie(){
    return in_array('Salarié', $_SESSION['user']['roles']);
 }
+
+
+function getCategories($_id_livre, $_bdd){
+    $sql = 'SELECT categorie.libelle FROM categorie_livre INNER JOIN categorie ON categorie_livre.id_categorie = categorie.id WHERE categorie_livre.id_livre = ?';
+    $requete = $_bdd -> prepare($sql);
+    $requete -> execute([$_id_livre]);
+    $categories = $requete ->fetchAll(PDO::FETCH_ASSOC);
+    $cat_livre=[];
+    foreach ($categories as $categorie) {
+        $cat_livre[] = implode($categorie);
+    }
+    return implode(', ' , $cat_livre);
+}
+
+function getAuteurs($_id_livre, $_bdd){
+    $sql = 'SELECT auteur.nom, auteur.prenom, auteur.nom_de_plume FROM auteur_livre INNER JOIN auteur ON auteur_livre.id_auteur = auteur.id WHERE auteur_livre.id_livre = ?';
+    $requete = $_bdd ->prepare($sql);
+    $requete->execute([$_id_livre]);
+    $auteurs = $requete->fetchAll(PDO::FETCH_ASSOC);
+    $aut_livre = [];
+    foreach ($auteurs as $auteur) {
+        $aut_livre[] = implode(' ', $auteur);
+    }
+    return implode(', ' , $aut_livre);
+}

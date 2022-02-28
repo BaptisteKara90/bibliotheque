@@ -9,9 +9,10 @@ if (!isConnect()) {
 }
 
 
-$sql = 'SELECT * FROM livre';
+$sql = 'SELECT * FROM livre'; 
 $requete = $bdd ->query($sql);
 $livres=$requete -> fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 
@@ -64,7 +65,7 @@ $livres=$requete -> fetchAll(PDO::FETCH_ASSOC);
                 <div class="container-fluid overflow-auto">
 
                     <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <div class="d-sm-flex align-items-center justify-content-center mb-4">
                         <h1 class="h3 mb-0 text-gray-800 text-center"> Liste Des Livres</h1>
                     </div>
 
@@ -90,7 +91,6 @@ $livres=$requete -> fetchAll(PDO::FETCH_ASSOC);
             <th scope="col">Numéro ISBN</th>
             <th scope="col">Titre</th>
             <th scope="col">Illustration</th>
-            <th scope="col">Auteur</th>
             <th scope="col">Résumé</th>
             <th scope="col">Catégorie</th>
             <th scope="col">Prix d'achat</th>
@@ -107,20 +107,19 @@ $livres=$requete -> fetchAll(PDO::FETCH_ASSOC);
         <?php foreach ($livres as $livre) : ?>
             <tr>
                 <!-- AFFICHAGE DES CHAMPS -->
-                <th scope="row"><?= $livre['id'] ?></th>
+                <th scope="row"><?= $livre['livre_id'] ?></th>
                 <td><?= $livre['num_ISBN'] ?></td>
                 <td><?= $livre['titre'] ?></td>
                 <td><img width="100%" height="100%" src="<?=URL_ADMIN?>img/illustration/<?=$livre['illustration']?>" alt=""></td>
-                <td><?= getAuteurs($livre['id'], $bdd) ?></td>
                 <td><?= substr($livre['resume'],0,100)?>[...]</td>
-                <td><?= getCategories($livre['id'], $bdd)?></td>
+                <td><?= $livre['libelle']?></td>
                 <td><?= $livre['prix'] ?>€</td>
                 <td><?= $livre['nb_pages'] ?></td>
                 <td><?= $livre['date_achat'] ?></td>
                 <td><?= $livre['disponibilite'] ?></td>
-                <td><a href="<?=URL_ADMIN?>livres/single.php?id=<?= $livre['id'] ?>" class="btn btn-success">Voir</a></td>
-                <td><a href="<?=URL_ADMIN?>livres/update.php?id=<?= $livre['id'] ?>" class="btn btn-warning">Modifier</a></td>
-                <td><a href="<?=URL_ADMIN?>livres/action.php?id=<?= $livre['id'] ?>" class="btn btn-danger">Supprimer</a></td>
+                <td><a href="<?=URL_ADMIN?>livres/single.php?id=<?= $livre['livre_id'] ?>" class="btn btn-success">Voir</a></td>
+                <td><a href="<?=URL_ADMIN?>livres/update.php?id=<?= $livre['livre_id'] ?>" class="btn btn-warning">Modifier</a></td>
+                <td><a href="<?=URL_ADMIN?>livres/action.php?id=<?= $livre['livre_id'] ?>" class="btn btn-danger">Supprimer</a></td>
             </tr>
         <?php endforeach; ?>
     </tbody>

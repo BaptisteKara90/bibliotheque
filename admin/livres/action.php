@@ -13,6 +13,8 @@ if (isset($_POST['btn_update_livre'])) {
     $disponibilite = htmlentities($_POST['disponibilite']);
     $date_achat = htmlentities($_POST['date_achat']);
     $categories = $_POST['categorie'];
+    $auteurs = $_POST['auteur'];
+ 
 
     //---- GESTION ANCIENNE ILLUSTRATION--------
     if (!empty($_FILES['illustration']['name'])) {
@@ -76,8 +78,28 @@ if (isset($_POST['btn_update_livre'])) {
     } else {
 
         $_SESSION['error_update_livre'] = false;
-        header('location:index.php');
 
+    }
+
+    //----------------GESTION AUTEUR-----------------
+    $sql = 'DELETE FROM auteur_livre WHERE id_livre = ?';
+    $requete = $bdd->prepare($sql);
+    if (!$requete->execute([$id])) {
+        header('location:update.php?id=' . $id);
+        die;
+    }
+
+    foreach ($auteurs as $id_auteur) {
+        $sql ='INSERT INTO auteur_livre VALUES (:id_auteur, :id_livre, NOW())';
+        $data = array(
+            ':id_auteur' => $id_auteur,
+            ':id_livre' => $id
+        );
+        $requete = $bdd->prepare($sql);
+        if (!$requete->execute($data)) {
+            header('location:update.php?id=' . $id);
+            die;
+        } 
     }
 
     //----------------GESTION CATEGORIE--------------
@@ -168,17 +190,55 @@ if (isset($_POST['btn_add_livre'])) {
 
 
 //-------SUPPRIMER UN LIVRE--------
-if (isset($_GET['id'])) {
+if (isset($_GET['id'])){
     $id = intval($_GET['id']);
-    if ($id > 0) {
-        $sql = 'DELETE FROM livre WHERE id = :id ';
-        $requete = $bdd->prepare($sql);
-        if (!$requete->execute(array(':id' => $id))) {
-            header('location:index.php');
-            die;
-        } else {
-            header('location:index.php');
-            die;
-        }
+    if ($id <= 0){
+        // erreur ID incorrect
+        $_SESSION['error_delete_livre'] = true;
+        header('location:index.php');
+        die;
     }
+    $sql = "SELECT illustration FROM livre WHERE id = ?";
+    $req = $bdd->prepare($sql);
+    $req->execute([$id]);
+    $nom_illustration = $req->fetch(PDO::FETCH_ASSOC);
+    $nom_illustration = $nom_illustration['illustration'];
+    $chemin_illustration = PATH_ADMIN . 'img/illustration/' . $nom_illustration;
+    if (!is_file($chemin_illustration)){
+       $_SESSION['error_delete_illustration'] = true;
+       header('location:index.php'); 
+       die;
+    }
+    if (!unlink($chemin_illustration)){
+        $_SESSION['error_delete_illustration'] = true;
+        header('location:index.php');
+        die;
+    }
+
+    // on supprime le lien categorie sur la BDD
+    $sql = 'DELETE FROM categorie_livre WHERE id_livre = ?';
+    $requete = $bdd->prepare($sql);
+    if (!$requete->execute([$id])) {
+        header('location:index.php');
+        die;
+    }
+    // on supprime le lien auteur de la BDD
+    $sql = 'DELETE FROM auteur_livre WHERE id_livre = ?';
+    $requete = $bdd->prepare($sql);
+    if (!$requete->execute([$id])) {
+        header('location:index.php');
+        die;
+    }
+
+    // on supprime le livre en BDD
+    $sql = "DELETE FROM livre WHERE id = ?";
+    $req = $bdd->prepare($sql);
+    if (!$req->execute([$id])){
+        $_SESSION['error_delete_livre'] = true;
+        header('location:index.php');
+        die;
+    }
+    $_SESSION['error_delete_livre'] = false;
+    header('location:index.php');
+    die;
 }

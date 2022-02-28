@@ -13,7 +13,9 @@ $sql = 'SELECT * FROM categorie';
 $requete = $bdd->query($sql);
 $categories = $requete->fetchAll(PDO::FETCH_ASSOC);
 
-
+$sql = 'SELECT * FROM auteur';
+$requete = $bdd->query($sql);
+$auteurs = $requete -> fetchAll(PDO::FETCH_ASSOC);
 
 
 if (isset($_GET['id'])) {
@@ -40,6 +42,19 @@ if (count($categorie_livre) >= 1) {
     }
 }else {
     $categorie_id = $categorie_livre[0];
+}
+
+$sql = 'SELECT id_auteur FROM auteur_livre WHERE id_livre = ?';
+$requete = $bdd->prepare($sql);
+$requete -> execute([$id]);
+$auteur_livre = $requete -> fetchAll(PDO::FETCH_NUM);
+$auteur_id = [];
+if (count($auteur_livre) > 1){
+    foreach ($auteur_livre as $id_auteur) {
+        $auteur_id[] = implode(' ', $id_auteur);
+    }
+}else {
+    $auteur_id = $auteur_livre[0];
 }
 ?>
 
@@ -121,6 +136,18 @@ if (count($categorie_livre) >= 1) {
                             <div class="mb-3">
                                 <label for="illustration" class="form-label">Illustration : </label>
                                 <input type="file" name="illustration" class="form-control" id="illustration" value="<?= $livre['illustration'] ?>">
+                            </div>
+                            <div class="mb-3">
+                                <select class="js-example-basic-multiple" name="auteur[]" multiple="multiple">
+                                    <?php foreach ($auteurs as $auteur) : ?>
+                                        <?php if (in_array($auteur['id'], $auteur_id)) {
+                                            $selected = 'selected';
+                                        } else {
+                                            $selected = '';
+                                        }  ?>
+                                        <option value="<?= $auteur['id'] ?>" <?= $selected ?>> <?= $auteur['nom'] . ' ' . $auteur['prenom'] . ' ' . $auteur['nom_de_plume'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
                             <div class="mb-3">
                                 <label for="resume" class="form-label">Résumé : </label>
