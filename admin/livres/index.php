@@ -8,10 +8,27 @@ if (!isConnect()) {
     die;
 }
 
+$sql = 'SELECT * FROM categorie';
+$requete = $bdd -> query($sql);
+$categories = $requete -> fetchAll(PDO::FETCH_ASSOC);
 
 $sql = 'SELECT * FROM livre';
 $requete = $bdd ->query($sql);
 $livres=$requete -> fetchAll(PDO::FETCH_ASSOC);
+
+$sql = 'SELECT id_categorie FROM categorie_livre';
+$requete = $bdd->query($sql);
+$categorie_livre = $requete -> fetchAll(PDO::FETCH_NUM);
+$categorie_id = [];
+if (count($categorie_livre) >= 1) {
+    foreach ($categorie_livre as $id_categorie) {
+        $categorie_id[] = implode('/', $id_categorie);
+    }
+}else {
+    $categorie_id = $categorie_livre[0];
+}
+
+
 ?>
 
 
@@ -78,6 +95,11 @@ $livres=$requete -> fetchAll(PDO::FETCH_ASSOC);
                 if (isset($_SESSION['error_add_livre']) && $_SESSION['error_add_livre'] == false) {
                     toto('success', "L'ajout du livre a bien été effectué!");
                     unset($_SESSION['error_add_livre']);
+                }
+
+                if (isset($_SESSION['error_delete_livre']) && $_SESSION['error_delete_livre'] == false) {
+                   toto('success', 'La suppression du livre a bien été effectué!');
+                   unset($_SESSION['error_delete_livre']);
                 }
 
             ?>
