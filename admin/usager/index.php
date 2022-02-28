@@ -8,29 +8,12 @@
         die;
     }
 
-    if (!isAdmin()) {
-        header('location:' . URL_ADMIN . 'index.php');
-    }
 
-    $sql = "SELECT * FROM utilisateur";
+    $sql = "SELECT * FROM usager";
     $req = $bdd->query($sql);
-    $utilisateurs = $req->fetchAll(PDO::FETCH_ASSOC);
+    $usagers = $req->fetchAll(PDO::FETCH_ASSOC);
 
-    $sql = 'SELECT * FROM role';
-    $requete = $bdd -> query($sql);
-    $roles = $requete -> fetchAll(PDO::FETCH_ASSOC);
-
-    $sql = 'SELECT id_role FROM role_utilisateur';
-    $requete = $bdd -> query($sql);
-    $role_utilisateur = $requete -> fetchAll(PDO::FETCH_NUM);
-    $role_id = [];
-    if (count($role_utilisateur) > 1) {
-        foreach ($role_utilisateur as $id_role) {
-            $role_id[] = implode(', ' , $id_role);
-        }
-    }else {
-        $role_id = $role_utilisateur[0];
-    }
+    
     
 ?>
 <!DOCTYPE html>
@@ -63,8 +46,8 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Liste des utilisateurs</h1>
+                    <div class="d-sm-flex align-items-center justify-content-center mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Liste des usagers</h1>
                     </div>
                     <table class="table">
                         <thead>
@@ -72,34 +55,30 @@
                                 <th scope="col">ID</th>
                                 <th scope="col">Nom</th>
                                 <th scope="col">Prénom</th>
-                                <th scope="col">Mail</th>
-                                <th scope="col">Téléphone</th>
                                 <th scope="col">Adresse</th>
-                                <th scope="col">Avatar</th>
-                                <th scope="col">rôle</th>
+                                <th scope="col">Mail</th>
+                                <th scope="col">Voir</th>
                                 <th scope="col">Modifer</th>
                                 <th scope="col">Supprimer</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach($utilisateurs as $utilisateur) : ?>
+                            <?php foreach($usagers as $usager) : ?>
                                 <tr>
-                                    <td><?= $utilisateur['id'] ?></td>
-                                    <td><?= $utilisateur['nom'] ?></td>
-                                    <td><?= $utilisateur['prenom'] ?></td>
-                                    <td><?= $utilisateur['mail'] ?></td>
-                                    <td><?= $utilisateur['num_telephone'] ?></td>
-                                    <td><?= $utilisateur['adresse'] . ', ' . $utilisateur['code_postal'] . ' ' . $utilisateur['ville']?></td>
-                                    <td><img width="75px" height="75px" src="<?= URL_ADMIN ?>img/avatar/<?= $utilisateur['avatar'] ?>" alt=""></td>
-                                    <td><?= getRoles($utilisateur['id'], $bdd)?></td>
-                                    <td><a href="<?=URL_ADMIN?>utilisateur/single.php?id=<?= $utilisateur['id'] ?>" class="btn btn-success">voir</a></td>
-                                    <td><a href="<?=URL_ADMIN?>utilisateur/update.php?id=<?= $utilisateur['id'] ?>" class="btn btn-warning">Modifier</a></td>
-                                    <td><a href="action.php?id=<?= $utilisateur['id'] ?>" class="btn btn-danger">Supprimer</a></td>
+                                    <td><?= $usager['id'] ?></td>
+                                    <td><?= $usager['nom'] ?></td>
+                                    <td><?= $usager['prenom'] ?></td>
+                                    <td><?= $usager['adresse'] . ', ' . $usager['code_postal'] . ' ' . $usager['ville']?></td>
+                                    <td><?= $usager['mail'] ?></td>
+                                    <td><a href="<?=URL_ADMIN?>usager/single.php?id=<?= $usager['id'] ?>" class="btn btn-success">voir</a></td>
+                                    <td><a href="<?=URL_ADMIN?>usager/update.php?id=<?= $usager['id'] ?>" class="btn btn-warning">Modifier</a></td>
+                                    <td><a href="action.php?id=<?= $usager['id'] ?>" class="btn btn-danger">Supprimer</a></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
+            </div>
                 <!-- /.container-fluid -->
             </div>
             <!-- End of Main Content -->

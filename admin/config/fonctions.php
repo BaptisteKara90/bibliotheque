@@ -69,3 +69,15 @@ function getAuteurs($_id_livre, $_bdd){
     }
     return implode(', ' , $aut_livre);
 }
+
+function getRoles($_id_utilisateur, $_bdd){
+    $sql = 'SELECT role.libelle FROM role_utilisateur INNER JOIN role ON role_utilisateur.id_role = role.id WHERE role_utilisateur.id_utilisateur = ?';
+    $requete = $_bdd->prepare($sql);
+    $requete -> execute([$_id_utilisateur]);
+    $roles = $requete -> fetchAll(PDO::FETCH_ASSOC);
+    $uti_role = [];
+    foreach ($roles as $role) {
+        $uti_role[] = implode(' ' , $role);
+    }
+    return implode(', ' , $uti_role);
+}

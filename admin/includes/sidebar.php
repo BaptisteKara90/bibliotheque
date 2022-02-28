@@ -116,8 +116,35 @@
 </li>
 <?php endif; ?>
 
+<li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUsager"
+        aria-expanded="true" aria-controls="collapseUsager">
+        <i class="fas fa-fw fa-wrench"></i>
+        <span>Usagers</span>
+    </a>
+    <div id="collapseUsager" class="collapse" aria-labelledby="headingUsager"
+        data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item" href="<?= URL_ADMIN?>usager/index.php">Liste des usagers</a>
+            <a class="collapse-item" href="<?= URL_ADMIN?>usager/add.php">Ajouter un usager</a>
+        </div>
+    </div>
+</li>
 
-
+<li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLoc"
+        aria-expanded="true" aria-controls="collapseLoc">
+        <i class="fas fa-fw fa-wrench"></i>
+        <span>Locations</span>
+    </a>
+    <div id="collapseLoc" class="collapse" aria-labelledby="headingLoc"
+        data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item" href="<?= URL_ADMIN?>location/index.php">Liste des locations</a>
+            <a class="collapse-item" href="<?= URL_ADMIN?>location/add.php">Ajouter une location</a>
+        </div>
+    </div>
+</li>
 <!-- Nav Item - Charts -->
 <li class="nav-item">
     <a class="nav-link" href="charts.html">
