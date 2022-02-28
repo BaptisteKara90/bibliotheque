@@ -13,6 +13,10 @@ $sql = 'SELECT * FROM categorie';
 $requete = $bdd->query($sql);
 $categories = $requete->fetchAll(PDO::FETCH_ASSOC);
 
+$sql = 'SELECT * FROM auteur';
+$requete = $bdd->query($sql);
+$auteurs = $requete->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 
@@ -92,12 +96,18 @@ $categories = $requete->fetchAll(PDO::FETCH_ASSOC);
                                 <label for="illustration" class="form-label">Illustration : </label>
                                 <input type="file" name="illustration" class="form-control" id="illustration">
                             </div>
+                            <label for="auteur" class="form-label">Auteur : </label>
+                            <select class="select-cat" name="auteur[]" multiple id="auteur">
+                                <?php  foreach($auteurs as $auteur) : ?>
+                                    <option value="<?= $auteur['id'] ?>"><?= $auteur['nom'] . ' ' . $auteur['prenom'] . ' ' . $auteur['nom_de_plume'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
                             <div class="mb-3">
                                 <label for="resume" class="form-label">Résumé : </label>
                                 <textarea class="form-control" name="resume" id="resume" rows="3"></textarea>
                             </div>
                             <div class="mb-3">
-                            <label for="cat" class="form-label">Catégories</label>
+                            <label for="cat" class="form-label">Catégories : </label>
                             <select class="select-cat" name="categorie[]" multiple id="cat">
                                 <?php  foreach($categories as $categorie) : ?>
                                     <option value="<?= $categorie['id'] ?>"><?= $categorie['libelle'] ?></option>

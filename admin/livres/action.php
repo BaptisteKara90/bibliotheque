@@ -181,6 +181,21 @@ if (isset($_POST['btn_add_livre'])) {
                 die;
             }
         }
+
+        
+        foreach ($_POST['auteur'] as $id_auteur) {
+            $sql = 'INSERT INTO auteur_livre VALUES (:id_auteur, :id_livre, NOW())';
+            $requete = $bdd->prepare($sql);
+            $data = array(
+                ':id_auteur' => $id_auteur,
+                ':id_livre' => $id_livre
+            );
+            if (!$requete->execute($data)) {
+                header('location:' . URL_ADMIN . 'livres/index.php');
+                die;
+            }
+        }
+
         $_SESSION['error_add_livre'] = false;
         header('location:index.php');
         die;
@@ -222,6 +237,7 @@ if (isset($_GET['id'])){
         header('location:index.php');
         die;
     }
+    
     // on supprime le lien auteur de la BDD
     $sql = 'DELETE FROM auteur_livre WHERE id_livre = ?';
     $requete = $bdd->prepare($sql);
