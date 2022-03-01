@@ -79,7 +79,7 @@
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEditeur"
         aria-expanded="true" aria-controls="collapseEditeur">
         <i class="fas fa-fw fa-wrench"></i>
-        <span>éditeurs</span>
+        <span>Éditeurs</span>
     </a>
     <div id="collapseEditeur" class="collapse" aria-labelledby="headingEditeur"
         data-parent="#accordionSidebar">

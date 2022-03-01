@@ -15,7 +15,10 @@ $livres = $requete -> fetchAll(PDO::FETCH_ASSOC);
 $sql = 'SELECT usager.nom, usager.prenom, usager.id FROM usager';
 $requete = $bdd->query($sql);
 $usagers = $requete -> fetchAll(PDO::FETCH_ASSOC);
+
+$sql = 'SELECT * FROM etat';
 ?>
+
 
 
 <!DOCTYPE html>
@@ -73,7 +76,7 @@ $usagers = $requete -> fetchAll(PDO::FETCH_ASSOC);
                     <!-- location : 
                     -Livre : titre + id (etat,...) seulement les dispos
                     -Usager : Nom + id
-                    - Date : Debut + Fin                                 -->
+                    - Date : Debut + Fin-->
 
                     <div class="container">
                         <form action="action.php" method="POST" enctype='multipart/form-data'>
@@ -94,15 +97,15 @@ $usagers = $requete -> fetchAll(PDO::FETCH_ASSOC);
                             </select>
                             </div>
                             <div class="mb-3">
-                                <label for="illustration" class="form-label">Illustration : </label>
-                                <input type="file" name="illustration" class="form-control" id="illustration">
+                                <label for="date_debut" class="form-label">Date de début de location : </label>
+                                <input type="date" name="date_debut" class="form-control" id="date_debut">
                             </div>
                             <div class="mb-3">
-                                <label for="resume" class="form-label">Résumé : </label>
-                                <textarea class="form-control" name="resume" id="resume" rows="3"></textarea>
+                                <label for="date_fin" class="form-label">Date de retour : </label>
+                                <input type="date" name="date_fin" class="form-control" id="date_fin">
                             </div>
                             <div class="mb-3">
-                                <label for="prix" class="form-label">Prix d'achat : </label>
+                                <label for="etat" class="form-label">État de début : </label>
                                 <input type="number" name="prix" class="form-control" id="prix">
                             </div>
                             <div class="mb-3">

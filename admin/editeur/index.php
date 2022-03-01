@@ -69,7 +69,7 @@ $editeurs=$requete -> fetchAll(PDO::FETCH_ASSOC);
                     </div>
 
 
-<div class="container">
+<div class="container-fluid">
 <table class="table">
     <thead>
         <tr>

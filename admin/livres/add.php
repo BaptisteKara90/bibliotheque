@@ -17,6 +17,9 @@ $sql = 'SELECT * FROM auteur';
 $requete = $bdd->query($sql);
 $auteurs = $requete->fetchAll(PDO::FETCH_ASSOC);
 
+$sql = 'SELECT * FROM etat';
+$requete = $bdd->query($sql);
+$etats = $requete->fetchAll(PDO::FETCH_ASSOC)
 ?>
 
 
@@ -113,6 +116,7 @@ $auteurs = $requete->fetchAll(PDO::FETCH_ASSOC);
                                     <option value="<?= $categorie['id'] ?>"><?= $categorie['libelle'] ?></option>
                                 <?php endforeach; ?>
                             </select>
+                            </div>
                             <div class="mb-3">
                                 <label for="prix" class="form-label">Prix d'achat : </label>
                                 <input type="number" name="prix" class="form-control" id="prix">
@@ -124,6 +128,14 @@ $auteurs = $requete->fetchAll(PDO::FETCH_ASSOC);
                             <div class="mb-3">
                                 <label for="date_achat" class="form-label">Date d'achat : </label>
                                 <input type="date" name="date_achat" class="form-control" id="date_achat">
+                            </div>
+                            <div class="mb-3">
+                            <label for="etat" class="form-label">État : </label>
+                            <select class="select-cat" name="etat" id="etat">
+                                <?php  foreach($etats as $etat) : ?>
+                                    <option value="<?= $etat['id'] ?>"><?= $etat['libelle'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
                             </div>
                             <div class="mb-3">
                                 <label for="disponibilite" class="form-label">Disponibilité : </label>

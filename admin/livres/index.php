@@ -81,7 +81,7 @@ if (count($categorie_livre) >= 1) {
                 <div class="container-fluid overflow-auto">
 
                     <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <div class="d-sm-flex align-items-center justify-content-center mb-4">
                         <h1 class="h3 mb-0 text-gray-800 text-center"> Liste Des Livres</h1>
                     </div>
 
@@ -104,7 +104,7 @@ if (count($categorie_livre) >= 1) {
 
             ?>
 
-<div class="container">
+<div class="container-fluid">
 <table class="table">
     <thead>
         <tr>
@@ -118,6 +118,7 @@ if (count($categorie_livre) >= 1) {
             <th scope="col">Prix d'achat</th>
             <th scope="col">Nombre de pages</th>
             <th scope="col">Date d'achat</th>
+            <th scope="col">État</th>
             <th scope="col">Disponibilité</th>
             <th scope="col">Voir</th>
             <th scope="col">Modifier</th>
@@ -139,6 +140,7 @@ if (count($categorie_livre) >= 1) {
                 <td><?= $livre['prix'] ?>€</td>
                 <td><?= $livre['nb_pages'] ?></td>
                 <td><?= $livre['date_achat'] ?></td>
+                <td><?= getEtats($livre['id'], $bdd) ?></td>
                 <td><?= $livre['disponibilite'] ?></td>
                 <td><a href="<?=URL_ADMIN?>livres/single.php?id=<?= $livre['id'] ?>" class="btn btn-success">Voir</a></td>
                 <td><a href="<?=URL_ADMIN?>livres/update.php?id=<?= $livre['id'] ?>" class="btn btn-warning">Modifier</a></td>

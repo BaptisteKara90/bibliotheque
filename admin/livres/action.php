@@ -14,6 +14,8 @@ if (isset($_POST['btn_update_livre'])) {
     $date_achat = htmlentities($_POST['date_achat']);
     $categories = $_POST['categorie'];
     $auteurs = $_POST['auteur'];
+    $etats = $_POST['etat'];
+    var_dump ($etats);
  
 
     //---- GESTION ANCIENNE ILLUSTRATION--------
@@ -123,6 +125,26 @@ if (isset($_POST['btn_update_livre'])) {
         } 
     }
 
+    //-----------GESTION ETAT-------------
+    $sql = 'DELETE FROM etat_livre WHERE id_livre = ?';
+    $requete = $bdd->prepare($sql);
+    if (!$requete->execute([$id])) {
+        header('location:update.php?id=' . $id);
+        die;
+    }
+ 
+        $sql = 'INSERT INTO etat_livre VALUES (:id_livre, :id_etat)';
+        $data = array(
+            ':id_etat'=> $etats,
+            ':id_livre'=> $id
+        );
+        $requete = $bdd -> prepare($sql);
+        if (!$requete ->execute($data)) {
+            header('location:update.php?id=' . $id);
+            die;
+        }
+    
+
     header('location:index.php');
     die;
 }
@@ -161,7 +183,7 @@ if (isset($_POST['btn_add_livre'])) {
         ':date_achat' => $date_achat,
         ':disponibilite' => $disponibilite
     );
-    var_dump($data);
+    
     if (!$requete->execute($data)) {
         $_SESSION['error_add_livre'] = true;
         header('location:add.php');
@@ -194,6 +216,17 @@ if (isset($_POST['btn_add_livre'])) {
                 header('location:' . URL_ADMIN . 'livres/index.php');
                 die;
             }
+        }
+
+        $sql = 'INSERT INTO etat_livre VALUES (:id_livre, :id_etat)';
+        $requete = $bdd ->prepare($sql);
+        $data = array(
+            ':id_livre'=>$id_livre,
+            ':id_etat' =>$_POST['etat']
+        );
+        if (!$requete->execute($data)) {
+            header('location:add.php');
+            die;
         }
 
         $_SESSION['error_add_livre'] = false;
@@ -240,6 +273,14 @@ if (isset($_GET['id'])){
     
     // on supprime le lien auteur de la BDD
     $sql = 'DELETE FROM auteur_livre WHERE id_livre = ?';
+    $requete = $bdd->prepare($sql);
+    if (!$requete->execute([$id])) {
+        header('location:index.php');
+        die;
+    }
+
+    // on supprime le lien etat de la BDD
+    $sql = 'DELETE FROM etat_livre WHERE id_livre = ?';
     $requete = $bdd->prepare($sql);
     if (!$requete->execute([$id])) {
         header('location:index.php');

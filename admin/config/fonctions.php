@@ -81,3 +81,15 @@ function getRoles($_id_utilisateur, $_bdd){
     }
     return implode(', ' , $uti_role);
 }
+
+function getEtats($_id_livre,$_bdd){
+    $sql = 'SELECT etat.libelle FROM etat_livre INNER JOIN etat ON etat_livre.id_etat = etat.id WHERE etat_livre.id_livre = ?';
+    $requete = $_bdd->prepare($sql);
+    $requete -> execute([$_id_livre]);
+    $etats = $requete -> fetchAll(PDO::FETCH_ASSOC);
+    $etat_livre = [];
+    foreach ($etats as $etat) {
+        $etat_livre[] = implode($etat);
+    }
+    return implode($etat_livre);
+}

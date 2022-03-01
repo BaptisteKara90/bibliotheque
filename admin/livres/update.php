@@ -15,7 +15,11 @@ $categories = $requete->fetchAll(PDO::FETCH_ASSOC);
 
 $sql = 'SELECT * FROM auteur';
 $requete = $bdd->query($sql);
-$auteurs = $requete -> fetchAll(PDO::FETCH_ASSOC);
+$auteurs = $requete->fetchAll(PDO::FETCH_ASSOC);
+
+$sql = 'SELECT * FROM etat';
+$requete = $bdd->query($sql);
+$etats = $requete->fetchAll(PDO::FETCH_ASSOC);
 
 
 if (isset($_GET['id'])) {
@@ -33,29 +37,36 @@ if (isset($_GET['id'])) {
 
 $sql = 'SELECT id_categorie FROM categorie_livre WHERE id_livre= ?';
 $requete = $bdd->prepare($sql);
-$requete -> execute([$id]);
-$categorie_livre = $requete -> fetchAll(PDO::FETCH_NUM);
+$requete->execute([$id]);
+$categorie_livre = $requete->fetchAll(PDO::FETCH_NUM);
 $categorie_id = [];
 if (count($categorie_livre) >= 1) {
     foreach ($categorie_livre as $id_categorie) {
         $categorie_id[] = implode('', $id_categorie);
     }
-}else {
+} else {
     $categorie_id = $categorie_livre[0];
 }
 
 $sql = 'SELECT id_auteur FROM auteur_livre WHERE id_livre = ?';
 $requete = $bdd->prepare($sql);
-$requete -> execute([$id]);
-$auteur_livre = $requete -> fetchAll(PDO::FETCH_NUM);
+$requete->execute([$id]);
+$auteur_livre = $requete->fetchAll(PDO::FETCH_NUM);
 $auteur_id = [];
-if (count($auteur_livre) > 1){
+if (count($auteur_livre) > 1) {
     foreach ($auteur_livre as $id_auteur) {
         $auteur_id[] = implode(' ', $id_auteur);
     }
-}else {
+} else {
     $auteur_id = $auteur_livre[0];
 }
+
+$sql = 'SELECT id_etat FROM etat_livre WHERE id_livre =?';
+$requete = $bdd->prepare($sql);
+$requete -> execute([$id]);
+$etat_livre = $requete ->fetchAll(PDO::FETCH_NUM);
+$etat_id = $etat_livre[0];
+
 ?>
 
 
@@ -138,6 +149,7 @@ if (count($auteur_livre) > 1){
                                 <input type="file" name="illustration" class="form-control" id="illustration" value="<?= $livre['illustration'] ?>">
                             </div>
                             <div class="mb-3">
+                                <label for="auteur" class="form-label">Auteur : </label>
                                 <select class="js-example-basic-multiple" name="auteur[]" multiple="multiple">
                                     <?php foreach ($auteurs as $auteur) : ?>
                                         <?php if (in_array($auteur['id'], $auteur_id)) {
@@ -154,6 +166,7 @@ if (count($auteur_livre) > 1){
                                 <textarea class="form-control" name="resume" id="resume" rows="3"><?= $livre['resume'] ?></textarea>
                             </div>
                             <div class="mb-3">
+                                <label for="categorie" class="form-label">Catégorie : </label>
                                 <select class="js-example-basic-multiple" name="categorie[]" multiple="multiple">
                                     <?php foreach ($categories as $categorie) : ?>
                                         <?php if (in_array($categorie['id'], $categorie_id)) {
@@ -180,10 +193,24 @@ if (count($auteur_livre) > 1){
                             <div class="mb-3">
                                 <label for="date_achat" class="form-label">Date d'achat : </label>
                                 <input type="date" name="date_achat" class="form-control" id="date_achat" value="<?= $livre['date_achat'] ?>">
-                                <div class="mb-3 text-center">
-                                    <input type="submit" name="btn_update_livre" class="btn btn-warning">
-                                    <a href="<?= URL_ADMIN ?>livres/index.php" class="btn btn-primary">Annuler</a>
-                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="etat" class="form-label">État : </label>
+                                <select class="js-example-basic-multiple" name="etat" >
+                                    <?php foreach ($etats as $etat) : ?>
+                                        <?php if (in_array($etat['id'], $etat_id)) {
+                                            $selected = 'selected';
+                                        } else {
+                                            $selected = '';
+                                        }  ?>
+                                        <option value="<?= $etat['id'] ?>" <?= $selected ?>> <?= $etat['libelle'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>               
+                            <div class="mb-3 text-center">
+                                <input type="submit" name="btn_update_livre" class="btn btn-warning">
+                                <a href="<?= URL_ADMIN ?>livres/index.php" class="btn btn-primary">Annuler</a>
+                            </div>
                         </form>
                     </div>
 
