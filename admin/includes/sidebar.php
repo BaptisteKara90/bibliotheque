@@ -79,7 +79,7 @@
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEditeur"
         aria-expanded="true" aria-controls="collapseEditeur">
         <i class="fas fa-fw fa-wrench"></i>
-        <span>éditeurs</span>
+        <span>Éditeurs</span>
     </a>
     <div id="collapseEditeur" class="collapse" aria-labelledby="headingEditeur"
         data-parent="#accordionSidebar">
@@ -142,6 +142,7 @@
         <div class="bg-white py-2 collapse-inner rounded">
             <a class="collapse-item" href="<?= URL_ADMIN?>location/index.php">Liste des locations</a>
             <a class="collapse-item" href="<?= URL_ADMIN?>location/add.php">Ajouter une location</a>
+            <a class="collapse-item" href="<?= URL_ADMIN?>location/add.php">Conclure une location</a>
         </div>
     </div>
 </li>

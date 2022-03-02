@@ -8,14 +8,17 @@ if (!isConnect()) {
     die;
 }
 
-$sql = 'SELECT livre.titre, livre.id FROM livre';
+$sql = 'SELECT livre.titre, livre.id, livre.disponibilite FROM livre';
 $requete = $bdd->query($sql);
 $livres = $requete -> fetchAll(PDO::FETCH_ASSOC);
 
 $sql = 'SELECT usager.nom, usager.prenom, usager.id FROM usager';
 $requete = $bdd->query($sql);
 $usagers = $requete -> fetchAll(PDO::FETCH_ASSOC);
+
+$sql = 'SELECT * FROM etat';
 ?>
+
 
 
 <!DOCTYPE html>
@@ -73,7 +76,7 @@ $usagers = $requete -> fetchAll(PDO::FETCH_ASSOC);
                     <!-- location : 
                     -Livre : titre + id (etat,...) seulement les dispos
                     -Usager : Nom + id
-                    - Date : Debut + Fin                                 -->
+                    - Date : Debut + Fin-->
 
                     <div class="container">
                         <form action="action.php" method="POST" enctype='multipart/form-data'>
@@ -81,7 +84,9 @@ $usagers = $requete -> fetchAll(PDO::FETCH_ASSOC);
                             <label for="livre" class="form-label">Livre : </label>
                             <select class="select-cat" name="livre" id="livre">
                                 <?php  foreach($livres as $livre) : ?>
+                                    <?php if($livre['disponibilite'] == 0) : ?>
                                     <option value="<?= $livre['id'] ?>"><?= $livre['titre'] ?></option>
+                                    <?php endif; ?>
                                 <?php endforeach; ?>
                             </select>
                             </div>
@@ -94,31 +99,15 @@ $usagers = $requete -> fetchAll(PDO::FETCH_ASSOC);
                             </select>
                             </div>
                             <div class="mb-3">
-                                <label for="illustration" class="form-label">Illustration : </label>
-                                <input type="file" name="illustration" class="form-control" id="illustration">
+                                <label for="date_debut" class="form-label">Date de début de location : </label>
+                                <input type="date" name="date_debut" class="form-control" id="date_debut">
                             </div>
                             <div class="mb-3">
-                                <label for="resume" class="form-label">Résumé : </label>
-                                <textarea class="form-control" name="resume" id="resume" rows="3"></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="prix" class="form-label">Prix d'achat : </label>
-                                <input type="number" name="prix" class="form-control" id="prix">
-                            </div>
-                            <div class="mb-3">
-                                <label for="nb_pages" class="form-label">Nombre de pages : </label>
-                                <input type="number" name="nb_pages" class="form-control" id="nb_pages">
-                            </div>
-                            <div class="mb-3">
-                                <label for="date_achat" class="form-label">Date d'achat : </label>
-                                <input type="date" name="date_achat" class="form-control" id="date_achat">
-                            </div>
-                            <div class="mb-3">
-                                <label for="disponibilite" class="form-label">Disponibilité : </label>
-                                <input type="number" name="disponibilite" class="form-control" id="disponibilite">
+                                <label for="date_fin" class="form-label">Date de retour de location : </label>
+                                <input type="date" name="date_fin" class="form-control" id="date_fin">
                             </div>
                             <div class="mb-3 text-center">
-                                <input type="submit" name="btn_add_livre" class="btn btn-success">
+                                <input type="submit" name="btn_add_location" class="btn btn-success">
                             </div>
                         </form>
                     </div>

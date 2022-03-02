@@ -8,6 +8,13 @@ if (!isConnect()) {
     die;
 }
 
+$sql = 'SELECT location.id AS location_id, usager.id AS usager_id, usager.nom, usager.prenom,livre.id AS livre_id, livre.titre, location.date_debut, location.date_fin, etat.libelle,location.statut, FROM location INNER JOIN usager ON location.id_usager = usager.id INNER JOIN livre ON location.id_livre = livre.id INNER JOIN etat ON location.etat_debut = etat.id';
+
+$requete = $bdd ->query($sql);
+$locations = $requete->fetchAll(PDO::FETCH_ASSOC);
+
+
+
 
 ?>
 
@@ -65,23 +72,39 @@ if (!isConnect()) {
                         <h1 class="h3 mb-0 text-gray-800 text-center"> Liste Des Locations</h1>
                     </div>
 
-<div class="container">
+<div class="container-fluid">
 <table class="table">
     <thead>
         <tr>
-            
+            <th scope="col">ID Location</th>
+            <th scope="col">Usager</th>
+            <th scope="col">Livre</th>
+            <th scope="col">Date de début</th>
+            <th scope="col">Date de fin</th>
+            <th scope="col">État de début</th>
+            <th scope="col">État de fin</th>
+            <th scope="col">Statut</th>
             <th scope="col">Voir</th>
-            <th scope="col">Modifier</th>
+            <th scope="col">Cloturer</th>
             <th scope="col">Supprimer</th>
         </tr>
     </thead>
     <tbody>
+        <?php foreach ($locations as $location) : ?>
             <tr>
-               
-                <td><a href="<?=URL_ADMIN?>location/single.php" class="btn btn-success">Voir</a></td>
-                <td><a href="<?=URL_ADMIN?>location/update.php" class="btn btn-warning">Modifier</a></td>
-                <td><a href="<?=URL_ADMIN?>location/action.php" class="btn btn-danger">Supprimer</a></td>
+                <td><?= $location['location_id'] ?></td>
+                <td><?= $location['nom'] . ' ' . $location['prenom'] ?></td>
+                <td><a href="<?=URL_ADMIN?>livres/single.php?id=<?=$location['livre_id']?>"><?= $location['titre']?></a></td>
+                <td><?= $location['date_debut'] ?></td>
+                <td><?= $location['date_fin'] ?></td>
+                <td><?= $location['libelle'] ?></td>
+                <td><?php if ($location['statut'] == 1){echo $location['etat_retour'];} ?></td>
+                <td><?php if ($location['statut'] == 0){echo 'en cours';}else {echo 'cloturée';} ?></td>
+                <td><a href="<?=URL_ADMIN?>location/single.php?id=<?=$location['location_id']?>" class="btn btn-success">Voir</a></td>
+                <td><a href="<?=URL_ADMIN?>location/update.php?id=<?=$location['location_id']?>" class="btn btn-warning">Cloturer</a></td>
+                <td><a href="<?=URL_ADMIN?>location/action.php?id=<?=$location['location_id']?>" class="btn btn-danger">Supprimer</a></td>
             </tr>
+            <?php endforeach; ?>
     </tbody>
 </table>
 </div>
