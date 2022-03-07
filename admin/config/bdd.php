@@ -1,7 +1,7 @@
 <?php 
 
 
-$dsn ='mysql:dbname=bibliotheque2;host=localhost';
+$dsn ='mysql:dbname=bibliototheque2;host=localhost';
 $utilisateur = 'bibli2';
 $mdp = 'W0vp[T3aMNA0htv!';
 //---------forcer L'UTF8-------------
