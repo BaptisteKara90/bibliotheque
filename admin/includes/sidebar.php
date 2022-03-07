@@ -142,7 +142,6 @@
         <div class="bg-white py-2 collapse-inner rounded">
             <a class="collapse-item" href="<?= URL_ADMIN?>location/index.php">Liste des locations</a>
             <a class="collapse-item" href="<?= URL_ADMIN?>location/add.php">Ajouter une location</a>
-            <a class="collapse-item" href="<?= URL_ADMIN?>location/add.php">Conclure une location</a>
         </div>
     </div>
 </li>

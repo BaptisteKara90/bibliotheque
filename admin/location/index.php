@@ -8,12 +8,14 @@ if (!isConnect()) {
     die;
 }
 
-$sql = 'SELECT location.id AS location_id, usager.id AS usager_id, usager.nom, usager.prenom,livre.id AS livre_id, livre.titre, location.date_debut, location.date_fin, etat.libelle,location.statut, FROM location INNER JOIN usager ON location.id_usager = usager.id INNER JOIN livre ON location.id_livre = livre.id INNER JOIN etat ON location.etat_debut = etat.id';
+$sql = 'SELECT location.id AS location_id, usager.id AS usager_id, usager.nom, usager.prenom,livre.id AS livre_id, livre.titre, location.date_debut, location.date_fin, etat.libelle,location.statut FROM location INNER JOIN usager ON location.id_usager = usager.id INNER JOIN livre ON location.id_livre = livre.id INNER JOIN etat ON location.etat_debut = etat.id';
 
 $requete = $bdd ->query($sql);
 $locations = $requete->fetchAll(PDO::FETCH_ASSOC);
 
-
+$sql = 'SELECT etat.libelle FROM etat INNER JOIN location ON location.etat_retour = etat.id';
+$requete = $bdd ->query($sql);
+$etats_retour = $requete->fetchAll(PDO::FETCH_ASSOC);
 
 
 ?>
@@ -86,23 +88,25 @@ $locations = $requete->fetchAll(PDO::FETCH_ASSOC);
             <th scope="col">Statut</th>
             <th scope="col">Voir</th>
             <th scope="col">Cloturer</th>
-            <th scope="col">Supprimer</th>
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($locations as $location) : ?>
+        <?php foreach ($locations as $location) : 
+            $date_debut = date_create($location['date_debut']);
+            $date_fin = date_create($location['date_fin']);?>
             <tr>
                 <td><?= $location['location_id'] ?></td>
                 <td><?= $location['nom'] . ' ' . $location['prenom'] ?></td>
                 <td><a href="<?=URL_ADMIN?>livres/single.php?id=<?=$location['livre_id']?>"><?= $location['titre']?></a></td>
-                <td><?= $location['date_debut'] ?></td>
-                <td><?= $location['date_fin'] ?></td>
+                <td><?= $date_debut->format('d/m/Y') ?></td>
+                <td><?= $date_fin->format('d/m/Y') ?></td>
                 <td><?= $location['libelle'] ?></td>
-                <td><?php if ($location['statut'] == 1){echo $location['etat_retour'];} ?></td>
+                <td><?php if ($location['statut'] == 1){foreach ($etats_retour as $etat_retour) {
+                    echo $etat_retour['libelle'];
+                };} ?></td>
                 <td><?php if ($location['statut'] == 0){echo 'en cours';}else {echo 'cloturée';} ?></td>
                 <td><a href="<?=URL_ADMIN?>location/single.php?id=<?=$location['location_id']?>" class="btn btn-success">Voir</a></td>
                 <td><a href="<?=URL_ADMIN?>location/update.php?id=<?=$location['location_id']?>" class="btn btn-warning">Cloturer</a></td>
-                <td><a href="<?=URL_ADMIN?>location/action.php?id=<?=$location['location_id']?>" class="btn btn-danger">Supprimer</a></td>
             </tr>
             <?php endforeach; ?>
     </tbody>

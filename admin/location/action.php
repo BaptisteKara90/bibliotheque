@@ -63,10 +63,10 @@ if (isset($_POST['btn_update_location'])) {
     }
     $requete -> fetch(PDO::FETCH_ASSOC);
 
-    $etat_livre = getEtats($id_livre,$bdd,'id');
-    var_dump($etat_livre);
-    if (!$etat_livre == $etat_retour) {
-        $sql = 'DELETE etat_livre WHERE id_livre = ?';
+    //----CHANGEMENT ETAT LIVRE/LOC
+    $etat_livre = intval(getEtats($id_livre,$bdd,'id'));
+    if ($etat_livre !== $etat_retour) {
+        $sql = 'DELETE FROM etat_livre WHERE id_livre = ?';
         $requete = $bdd->prepare($sql);
         if (!$requete->execute([$id_livre])) {
             header('location:update.php?id=' . $id_location);
@@ -76,7 +76,7 @@ if (isset($_POST['btn_update_location'])) {
         $sql = 'INSERT INTO etat_livre VALUES (:id_livre, :id_etat)';
         $data = array(
             ':id_etat'=> $etat_retour,
-            ':id_livre'=> $id
+            ':id_livre'=> $id_livre
         );
         $requete = $bdd -> prepare($sql);
         if (!$requete ->execute($data)) {
@@ -84,6 +84,18 @@ if (isset($_POST['btn_update_location'])) {
             die;
         }
     }
+
+    //-----CHANGEMENT DISPONIBILITÉ--------
+    $sql = 'UPDATE livre SET disponibilite = :disponibilite WHERE id = :id';
+    $data = array(
+        ':disponibilite' => 0,
+        ':id' => $id_livre
+    );
+    $requete = $bdd ->prepare($sql);
+    if (!$requete -> execute($data)) {
+        header('location:update.php?id=' . $id_location);
+    }
+
     header('location:index.php');
     die;
 }
